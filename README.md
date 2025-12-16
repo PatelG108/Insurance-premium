@@ -1,11 +1,21 @@
 # 🛡️ Insurance Premium Prediction System
 ---
 
-![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python)
-![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?logo=fastapi)
-![Streamlit](https://img.shields.io/badge/Streamlit-Frontend-FF4B4B?logo=streamlit)
-![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?logo=docker)
-![Status](https://img.shields.io/badge/Status-Production%20Ready-success)
+[![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?logo=fastapi)](https://fastapi.tiangolo.com/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-Frontend-FF4B4B?logo=streamlit)](https://streamlit.io/)
+[![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?logo=docker)](https://www.docker.com/)
+[![Status](https://img.shields.io/badge/Status-Production%20Ready-success)](https://github.com/PatelG108/Insurance-premium)
+
+---
+## 🐳 Docker Images
+
+ [![Docker Hub](https://img.shields.io/badge/Docker%20Hub-Images-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://hub.docker.com/u/amitpatel108)
+ 
+- Backend: https://hub.docker.com/r/amitpatel108/insurance-premium-backend
+- Frontend: https://hub.docker.com/r/amitpatel108/insurance-premium-frontend
+---
+
 
 ## 👤 Connect with Me
 
@@ -22,7 +32,8 @@ The project is fully **Dockerized** with:
 - **Scikit-learn** trained ML model
 - Clean schema validation using **Pydantic**
 
----
+
+
 
 ## 🚀 Features
 
@@ -146,7 +157,7 @@ json
 ---
 # 👤 Author
 
-📌 Developed by **Amit Patel**  
+📌 Developed by **Amit Kumar**  
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Amit%20Kumar-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/amit-kumar-c/)
 [![GitHub](https://img.shields.io/badge/GitHub-PatelG108-181717?style=for-the-badge&logo=github)](https://github.com/PatelG108)
