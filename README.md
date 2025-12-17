@@ -11,6 +11,11 @@
 ## 🌐 Live Demo
 
 [![Live on Render](https://img.shields.io/badge/Live%20on-Render-8A2BE2?style=for-the-badge&logo=render&logoColor=white)](https://insurance-premium-prediction-iv8b.onrender.com)
+> ⚠️ **Note**  
+> This application is hosted on a free cloud tier.  
+> If the service has been inactive, the backend may take **50–60 seconds** to initialize on the first request.
+
+
 
 ---
 ## 🐳 Docker Images
