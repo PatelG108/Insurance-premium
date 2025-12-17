@@ -8,6 +8,11 @@
 [![Status](https://img.shields.io/badge/Status-Production%20Ready-success)](https://github.com/PatelG108/Insurance-premium)
 
 ---
+## 🌐 Live Demo
+
+[![Live on Render](https://img.shields.io/badge/Live%20on-Render-8A2BE2?style=for-the-badge&logo=render&logoColor=white)](https://insurance-premium-prediction-iv8b.onrender.com)
+
+---
 ## 🐳 Docker Images
 
  [![Docker Hub](https://img.shields.io/badge/Docker%20Hub-Images-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://hub.docker.com/u/amitpatel108)
