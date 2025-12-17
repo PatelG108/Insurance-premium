@@ -1,14 +1,14 @@
 import streamlit as st
 import requests
-
 import os
 
+# ================== 🔗 BACKEND API ==================
 API_URL = os.getenv(
     "BACKEND_URL",
     "http://localhost:8000/predict"  # fallback for local dev
 )
 
-
+# ================== ⚙️ PAGE CONFIG ==================
 st.set_page_config(
     page_title="Insurance Premium Predictor",
     page_icon="🛡️",
@@ -20,16 +20,7 @@ st.set_page_config(
 def local_css():
     st.markdown("""
     <style>
-    /* Use Streamlit's native variables for colors so it works in Dark & Light mode */
-    
-    /* Main container adjustments */
-    .stApp {
-        /* This uses the theme's background color automatically */
-    }
-
-    /* --------- Custom Cards --------- */
-    /* We use 'var(--secondary-background-color)' so the card is 
-       light grey in Light Mode and dark grey in Dark Mode */
+    /* --------- Cards --------- */
     div.css-1r6slb0.e1tzin5v2, [data-testid="stForm"] {
         background-color: var(--secondary-background-color);
         border: 1px solid var(--text-color);
@@ -39,29 +30,27 @@ def local_css():
         margin-bottom: 20px;
     }
 
-    /* --------- Headings & Text --------- */
+    /* --------- Typography --------- */
     h1, h2, h3, h4, h5, h6, p, label {
         color: var(--text-color) !important;
     }
-    
+
     .subtitle {
-        color: var(--text-color);
-        opacity: 0.7;
+        opacity: 0.75;
         font-size: 1.1rem;
-        margin-bottom: 30px;
+        margin-bottom: 20px;
     }
-    
-    /* --------- Result Banners (Fixed Colors) --------- */
-    /* These keep their specific colors because they are status indicators */
+
+    /* --------- Result Cards --------- */
     .result-card {
         padding: 20px;
         border-radius: 12px;
         text-align: center;
-        color: white !important; /* Always white text on colored banners */
+        color: white !important;
         margin-bottom: 20px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.25);
     }
-    
+
     .low-bg { background: linear-gradient(135deg, #11998e, #38ef7d); }
     .medium-bg { background: linear-gradient(135deg, #f2994a, #f2c94c); }
     .high-bg { background: linear-gradient(135deg, #eb3349, #f45c43); }
@@ -69,11 +58,10 @@ def local_css():
     /* --------- Footer --------- */
     .footer {
         text-align: center;
-        color: var(--text-color);
         opacity: 0.5;
         font-size: 0.85rem;
-        margin-top: 50px;
-        padding-top: 20px;
+        margin-top: 40px;
+        padding-top: 15px;
         border-top: 1px solid var(--text-color);
     }
     </style>
@@ -84,55 +72,62 @@ local_css()
 # ================== 🏠 HEADER ==================
 st.title("🛡️ Insurance Premium Predictor")
 st.markdown(
-    "<div class='subtitle'>AI-powered analysis to estimate your insurance risk category.</div>", 
+    "<div class='subtitle'>AI-powered analysis to estimate your insurance risk category.</div>",
     unsafe_allow_html=True
+)
+
+st.info(
+    "ℹ️ This app runs on a free cloud tier. "
+    "If inactive, the backend may take **30–60 seconds** to wake up on the first request."
 )
 
 # ================== 📝 INPUT FORM ==================
 with st.form("prediction_form"):
     st.subheader("🧾 Your Profile")
-    
-    # --- Section 1: Health Metrics ---
+
     st.markdown("**1️⃣ Health Metrics**")
     col1, col2, col3 = st.columns(3)
-    
+
     with col1:
-        age = st.number_input("Age", 18, 100, 30, help="Age in years")
+        age = st.number_input("Age", 18, 100, 30)
     with col2:
         weight = st.number_input("Weight (kg)", 30.0, 200.0, 70.0)
     with col3:
         height = st.number_input("Height (m)", 0.5, 2.5, 1.75)
 
-    # Dynamic BMI Display
     if height > 0:
         bmi = weight / (height ** 2)
         st.info(f"💡 Calculated BMI: **{bmi:.1f}**")
 
     st.markdown("---")
 
-    # --- Section 2: Lifestyle ---
     st.markdown("**2️⃣ Lifestyle & Details**")
     col_a, col_b = st.columns(2)
-    
+
     with col_a:
         income_lpa = st.number_input("Annual Income (LPA)", 0.0, 100.0, 10.0)
         occupation = st.selectbox(
             "Occupation",
-            ["Student", "Private Job", "Government Job", "Business Owner", "Freelancer", "Unemployed", "Retired"]
+            [
+                "Student",
+                "Private Job",
+                "Government Job",
+                "Business Owner",
+                "Freelancer",
+                "Unemployed",
+                "Retired"
+            ]
         )
-        
+
     with col_b:
         city = st.text_input("City", "Mumbai").strip().title()
-        st.write("") # Spacer
-        st.write("") # Spacer
+        st.write("")
         smoker = st.toggle("Do you smoke?", value=False)
 
-    # Submit Button
     submit_btn = st.form_submit_button("🔍 Analyze Premium", type="primary")
 
-# ================== 🚀 PREDICTION LOGIC ==================
+# ================== 🚀 PREDICTION ==================
 if submit_btn:
-    # Prepare payload
     payload = {
         "age": age,
         "weight": weight,
@@ -145,48 +140,84 @@ if submit_btn:
 
     try:
         with st.spinner("🤖 Consulting the AI model..."):
-            response = requests.post(API_URL, json=payload, timeout=5)
-            
+            response = requests.post(API_URL, json=payload, timeout=10)
+
         if response.status_code == 200:
             data = response.json()
-            
+
             category = data.get("predicted_category", "Unknown")
             confidence = data.get("confidence", 0.0)
             probs = data.get("class_probabilities", {})
 
-            # UI Mapping
             ui_config = {
-                "Low": {"bg": "low-bg", "icon": "🟢", "msg": "Great! You are eligible for standard rates."},
-                "Medium": {"bg": "medium-bg", "icon": "🟡", "msg": "Moderate risk. Premium will be average."},
-                "High": {"bg": "high-bg", "icon": "🔴", "msg": "High risk detected. Expect a surcharge."}
+                "Low": {
+                    "bg": "low-bg",
+                    "icon": "🟢",
+                    "msg": "You are eligible for standard insurance rates."
+                },
+                "Medium": {
+                    "bg": "medium-bg",
+                    "icon": "🟡",
+                    "msg": "Moderate risk profile. Premium may be average."
+                },
+                "High": {
+                    "bg": "high-bg",
+                    "icon": "🔴",
+                    "msg": "Higher risk detected. Premium may include a surcharge."
+                }
             }
-            
-            style = ui_config.get(category, {"bg": "medium-bg", "icon": "❓", "msg": "Processing..."})
 
-            # --- Result Display ---
+            style = ui_config.get(
+                category,
+                {"bg": "medium-bg", "icon": "❓", "msg": "Risk analysis in progress."}
+            )
+
             st.markdown(f"""
             <div class="result-card {style['bg']}">
-                <h2 style="color: white !important;">{style['icon']} {category} Premium</h2>
-                <p style="font-size: 1.1rem; opacity: 0.9; color: white !important;">Confidence: <b>{confidence*100:.1f}%</b></p>
-                <p style="margin-top:10px; font-size: 0.9rem; color: white !important;">{style['msg']}</p>
+                <h2>{style['icon']} {category} Premium</h2>
+                <p style="font-size:1.1rem;">Confidence: <b>{confidence*100:.1f}%</b></p>
+                <p style="font-size:0.9rem;">{style['msg']}</p>
             </div>
             """, unsafe_allow_html=True)
 
-            # --- Probability Breakdown ---
-            with st.expander("📊 View Detailed Probabilities", expanded=True):
+            with st.expander("📊 Probability Distribution"):
                 for cat, prob in probs.items():
                     st.progress(prob, text=f"{cat}: {prob*100:.1f}%")
-        
+
+        elif response.status_code in (502, 503, 504):
+            st.warning(
+                "⏳ **Backend is waking up**\n\n"
+                "This app runs on a free cloud tier. "
+                "Please wait **30–60 seconds** and try again."
+            )
+
         else:
-            st.error(f"❌ Server Error: {response.status_code}")
+            st.error(
+                f"⚠️ Server returned unexpected status ({response.status_code}). "
+                "Please try again later."
+            )
+
+    except requests.exceptions.Timeout:
+        st.warning(
+            "⏳ **Request timed out**\n\n"
+            "The backend may be starting up. Please retry shortly."
+        )
 
     except requests.exceptions.ConnectionError:
-        st.error("🔌 API Unreachable. Make sure the backend server is running.")
-    except Exception as e:
-        st.error(f"⚠️ An unexpected error occurred: {e}")
+        st.error(
+            "🔌 **Unable to reach backend service**\n\n"
+            "Please try again in a moment."
+        )
+
+    except Exception:
+        st.error(
+            "⚠️ **Unexpected error occurred**\n\n"
+            "Please refresh the page and try again."
+        )
 
 # ================== 🦶 FOOTER ==================
 st.markdown(
-    "<div class='footer'>⚠️ AI estimates are for informational purposes only. Consult an agent for actual quotes.</div>", 
+    "<div class='footer'>⚠️ AI estimates are for informational purposes only. "
+    "Consult an insurance advisor for actual quotes.</div>",
     unsafe_allow_html=True
 )
