@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 
 # ================== ⚙️ CONFIG ==================
-API_URL = "http://backend:8000/predict"
+API_URL = "https://insurance-premium-backend.onrender.com/predict"
 
 st.set_page_config(
     page_title="Insurance Premium Predictor",
